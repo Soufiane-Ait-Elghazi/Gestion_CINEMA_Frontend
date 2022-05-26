@@ -1,0 +1,73 @@
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <ul class="list-group"  *ngIf="villes">
+        <li [ngClass]="v == currentVille? 'activeClass':''"    class="list-group-item clickable" *ngFor="let v of villes._embedded.villes "(click)="onGetCinemas(v)">{{v.name}}</li>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <div class="panel-default">
+        <div class="panel-heading">List des cinemas</div>
+            <div class="panel-body">
+              <ul class="nav nav-pills"  *ngIf="cinemas" >
+                <li [ngClass]="c == currentCinema? 'activeClass2':''"  *ngFor="let c of cinemas._embedded.cinemas " class="clickable">
+                  <a (click)="onGetSalles(c)" >{{c.name}}</a></li>
+              </ul>
+              <br>
+               <div *ngIf="salles">
+                 <div *ngFor="let s  of  salles._embedded.salles">
+                   <div class="col-md-6">
+                     <div class="panel panel-default">
+                       <div class="panel-heading">{{s.name}}</div>
+                       <div class="panel-body" *ngIf="s.projections" >
+                         <div class="row">
+                           <div class="col-md-6">
+                             <img width="200px" height="350px" src="{{cinemaService.host+'photoFilm/'+s.projections._embedded.projections[0].film.id}}">
+                           </div>
+                           <div class="col-md-6">
+                             <ul class="list-group">
+                               <li class="list-group-item">Séances :</li>
+                               <li [ngClass]="p == currentProjection? 'active':''"  (click)="onGetTicketsPlaces(p)" *ngFor="let p of s.projections._embedded.projections" class="list-group-item clickable">
+                                 {{p.seance.heureDebut}} => Prix :{{p.prix|number:'0.00'}} DH
+                               </li>
+                             </ul>
+                           </div>
+                         </div>
+                         <div class="row" *ngIf="currentProjection">
+                           <div *ngIf="currentProjection.tickets._embedded.tickets">
+                             <div *ngIf="s.id == currentProjection.salle.id">
+                               <div *ngIf="currentProjection.tickets">
+                                 <button  class="{{getTicketClass(t)}} ticket"     (click)="onSelectTicket(t)"    *ngFor="let t of currentProjection.tickets._embedded.tickets">
+                                   {{t.place.numero}}
+                                 </button>
+                               </div>
+                               <div>
+                                 <form #f="ngForm" (ngSubmit)="onPayTickets(f.value)">
+                                    <div class="list-group">
+                                      <div class="control-label">Nom client :</div>
+                                      <input type="text" name="nomClient" class="form-control" ngModel>
+                                    </div>
+                                   <div class="list-group">
+                                     <div class="control-label">Code payement :</div>
+                                     <input type="password" name="codePayement" class="form-control" ngModel>
+                                   </div>
+                                   <button type="submit" class="btn btn-success">Payer</button>
+                                 </form>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

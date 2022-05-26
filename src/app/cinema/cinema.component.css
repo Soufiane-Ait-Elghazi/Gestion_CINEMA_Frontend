@@ -1,0 +1,16 @@
+.clickable{
+  cursor: pointer;
+}
+.ticket{
+  margin : 5px;
+  width :40px;
+}
+
+.activeClass {
+  background-color: greenyellow;
+  color : floralwhite;
+}
+.activeClass2 {
+  background-color: red;
+  color : floralwhite;
+}
